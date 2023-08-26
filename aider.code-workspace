@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.osx": {
+			"PATH": "" // do this to fix issues with conda using wrong python version
+		}
+	}
+}
