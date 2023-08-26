@@ -1,3 +1,4 @@
 __pycache__/
 aider_chat.egg-info/
 .env
+.aider.conf.yml
