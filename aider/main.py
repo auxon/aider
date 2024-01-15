@@ -143,6 +143,12 @@ def main(argv=None, input=None, output=None, force_git_root=None):
         help=f"Specify the model to use for the main chat (default: {models.GPT4.name})",
     )
     core_group.add_argument(
+        "--skip-model-availability-check",
+        metavar="SKIP_MODEL_AVAILABILITY_CHECK",
+        default=False,
+        help="Override to skip model availability check (default: False)",
+    )
+    core_group.add_argument(
         "-3",
         action="store_const",
         dest="model",
@@ -449,8 +455,6 @@ def main(argv=None, input=None, output=None, force_git_root=None):
             )
         return 1
 
-    main_model = models.Model(args.model)
-
     openai.api_key = args.openai_api_key
     for attr in ("base", "type", "version", "deployment_id", "engine"):
         arg_key = f"openai_api_{attr}"
@@ -460,11 +464,14 @@ def main(argv=None, input=None, output=None, force_git_root=None):
             setattr(openai, mod_key, val)
             io.tool_output(f"Setting openai.{mod_key}={val}")
 
+    main_model = models.Model.create(args.model)
+
     try:
         coder = Coder.create(
             main_model,
             args.edit_format,
             io,
+            args.skip_model_availability_check,
             ##
             fnames=fnames,
             git_dname=git_dname,
